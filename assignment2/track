@@ -1,0 +1,79 @@
+#!/bin/bash
+
+LOGFILE="track.log"
+HELPFUL_MSG="ERROR: Run with argument \"start\", \"stop\", \"status\" or \"log\""
+
+if [ -s ${LOGFILE} ]; then  # logfile exists and is not empty
+    last=`cat ${LOGFILE} | tail -n 1 | cut -d" " -f1`
+    if [ ${last} == "END" ]; then
+        running=false
+    else
+        running=true
+    fi
+elif [ -f ${LOGFILE} ]; then # logfile exists but is empty
+    running=false
+else    # logfile does not exist
+    touch ${LOGFILE}
+    running=false
+fi
+
+if [ $# -eq 0 ]; then
+    echo ${HELPFUL_MSG}
+    exit 1
+fi
+
+start()
+{
+    if [ $# -eq 0 ]; then
+        echo "Include label with start: track start [label]"
+        exit 1
+    elif $running; then
+        printf "ERROR: Cannot start task.\nA task is already running.\n"
+        exit 1
+    fi
+    label=$@
+    echo "" >> ${LOGFILE}
+    echo "START `date`" >> ${LOGFILE}
+    echo "LABEL ${label}" >> ${LOGFILE}
+    echo "Task started: ${label}";
+}
+
+stop()
+{
+    if ! ${running}; then
+        printf "ERROR: Cannot stop task.\nNo task is running.\n"
+        exit 1
+    fi
+    echo "END `date`" >> ${LOGFILE}
+    echo "Task stopped"
+}
+
+status()
+{
+    if $running; then
+        echo Task running:
+        cat $LOGFILE | tail -n 1
+    else
+        echo No task is running.
+    fi
+}
+
+display_log()
+{
+    echo "Not yet implemented"
+}
+
+option=$1;
+shift;
+case "$option" in 
+    "start")
+        start $@; ;;
+    "stop")
+        stop; ;;
+    "status")
+        status; ;;
+    "log")
+        display_log; ;;
+    *)
+        echo ${HELPFUL_MSG}; exit 1 ;;
+esac
