@@ -1,13 +1,10 @@
 import numpy as np
 import cv2
+from numba import jit
+from blur_1 import load_image
 
-def load_image(fname):
-    image = cv2.imread(fname)
-    src = np.pad(image, ((1, 1), (1, 1), (0, 0)), mode='edge')
-    src = src.astype('uint32')
-    return src, image.shape
-
-def blur_image(fname):
+@jit(nopython=True)
+def convolve(src, dst, shape):
     """Blur the image given as parameter using slow pure-python approach.
     input:
         fname: str, 
@@ -18,8 +15,6 @@ def blur_image(fname):
                 W is the width of the picture (pixels),
             The blurred image
     """
-    src, shape = load_image(fname)
-    dst = np.zeros(shape) # zeros of floats to support division later
     H, W, C = shape
     for h in range(1, H+1):
         dst_h = h - 1
@@ -30,11 +25,16 @@ def blur_image(fname):
                             + src[h, w-1, c] + src[h, w+1, c]
                             + src[h-1, w-1, c] + src[h-1, w+1, c]
                             + src[h+1, w-1, c] + src[h+1, w+1, c])/9
-    
-    dst = dst.astype('uint8')
     return dst
     
+def blur_image(fname):
+    src, shape = load_image(fname)
+    dst = np.zeros(shape) # zeros of floats to support division later
+    blurred = convolve(src, dst, shape)
+    blurred = blurred.astype('uint8')
+    return blurred
+
 if __name__ == '__main__':
     fname = 'beatles.jpg'
     blurred = blur_image(fname)
-    cv2.imwrite('beatles_blurred.jpg', blurred)
+    cv2.imwrite('beatles_blurred_3.jpg', blurred)

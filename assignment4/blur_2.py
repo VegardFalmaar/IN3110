@@ -1,7 +1,6 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import cv2
-import sys
+from blur_1 import load_image
 
 def blur_image(fname):
     """Blur the image given as parameter using numpy vectorized operations.
@@ -14,24 +13,15 @@ def blur_image(fname):
                 W is the width of the picture (pixels),
             The blurred image
     """
-    image = cv2.imread(fname)
-    src = np.pad(image, ((1, 1), (1, 1), (0, 0)), mode='edge')
-    src = src.astype('uint32')
-
+    src, _ = load_image(fname)
     dst = (src[1:-1, 1:-1, :] + src[:-2, 1:-1, :] + src[2:, 1:-1, :]
                             + src[1:-1, :-2, :] + src[1:-1, 2:, :]
                             + src[:-2, :-2, :] + src[:-2, 2:, :]
                             + src[2:, :-2, :] + src[2:, 2:, :])/9
-
     dst = dst.astype('uint8')
     return dst
     
-fname = 'beatles.jpg'
-blurred = blur_image(fname)
-cv2.imwrite('beatles_blurred_2.jpg', blurred)
-
-# argparser
-if False:
-    import blur_1
-    slow_blurred = blur_1.blur_image(fname)
-    np.testing.assert_array_equal(blurred, slow_blurred)
+if __name__ == '__main__':
+    fname = 'beatles.jpg'
+    blurred = blur_image(fname)
+    cv2.imwrite('beatles_blurred_2.jpg', blurred)
