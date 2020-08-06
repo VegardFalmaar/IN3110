@@ -1,0 +1,7 @@
+Size of image: (480, 640, 3)
+Total and average time for 3, 50 and 50 runs:
+
+  blur_1    blur_2    blur_3  
+------------------------------
+ 27.82228  2.19133   1.04959  
+ 9.27409   0.04383   0.02099  
