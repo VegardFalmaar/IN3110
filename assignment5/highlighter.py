@@ -25,45 +25,29 @@ with open(args.theme, 'r') as infile:
 syntax = {}
 with open(args.syntax, 'r') as infile:
     for line in infile:
+        # in case there is a space in the regular expression
         *pattern, name = line.split()
         pattern = ' '.join(pattern)
+
+        # remove colon and quotation mark
         pattern = pattern.strip(':')[1:-1]
-        pattern = re.compile('(' + pattern + ')')
+        pattern = re.compile(pattern)
         syntax[pattern] = theme[name]
 
 with open(args.source, 'r') as infile:
     content = infile.readlines()
 content = ''.join(content)
 
-# Let us go
-# This is a print test
-start_code = "\033[{}m"
-end_code = "\033[0m"
-
-"""
-colored = {}
-
-for line in content:
-    for pattern, color in syntax.items():
-        matches = pattern.finditer(line)
-        for match in matches:
-            colored[match.span()] = color
-        start = start_code.format(color)
-        line = pattern.sub(start + r'\1' + end_code, line)
-    print(line, end='')
-print()
-"""
-
-color_code = "\033[{}m"
+color_code = '\033[{}m'
 to_color = {}
 
 for pattern, color in syntax.items():
-    shift = 0
     matches = pattern.finditer(content)
     for match in matches:
-        idx = match.span()
+        idx = match.span(1)
         start, stop = idx
         end = 0
+        # check if the match is inside an already colored region
         for (prev_start, prev_stop), (prev_color, _) in to_color.items():
             if (start > prev_start) and (stop < prev_stop):
                 end = prev_color

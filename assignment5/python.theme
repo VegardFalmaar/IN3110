@@ -1,9 +1,13 @@
 comment: 0;32
-print: 0;92
 string: 0;93
 key_words: 0;96
 number: 0;94
 function: 0;95
-parenthesis: 0;00
 key_words2: 0;35
 key_words3: 0;33
+if_blocks: 0;34
+try_except: 0;36
+Errors: 0;5
+modules: 0;92
+decorators: 0;94
+class_declaration: 0;92

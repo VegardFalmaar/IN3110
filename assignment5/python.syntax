@@ -1,0 +1,16 @@
+"(#.*(?:$|\n))": comment
+"("{3}(.|\n)*"{3})": comment
+"('[^']*')": string
+"(for|while|import|from|as) ": key_words
+"[^a-zA-Z](\d+)": number
+"(\w+)\(": function
+"class (\w+)": class_declaration
+"\W(in|and|class|def|with|assert|return) ": key_words2
+"(pass|break)(?:$|\n)": key_words2
+"(True|False|None)": key_words3
+"(not) ": key_words3
+"(if|elif|else) ": if_blocks
+"(try|except)": try_except
+"(\w+Error)": Errors
+"(\w+)\.\w": modules
+"(@\w+)(?:$|\n)": decorators
