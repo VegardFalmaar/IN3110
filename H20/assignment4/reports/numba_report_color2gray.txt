@@ -1,0 +1,6 @@
+Timing: numba_color2gray
+Shape: (400, 600, 3)
+Average runtime over 5 runs:
+   0.1011 seconds
+python_color2gray takes 44.933 times as long
+numpy_color2gray takes 0.118 times as long

@@ -1,0 +1,6 @@
+Timing: python_color2sepia
+Shape: (400, 600, 3)
+Average runtime over 5 runs:
+   2.8099 seconds
+numpy_color2sepia takes 0.006 times as long
+numba_color2sepia takes 0.062 times as long
